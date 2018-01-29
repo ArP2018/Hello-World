@@ -1,0 +1,18 @@
+Python 爬虫学习总结
+urllib模块知识点梳理
+
+常用方法与内置属性
+
+urlopen
+
+带参数
+
+使用代理
+
+伪造浏览器
+
+图片下载
+
+urllib在python2与python3的区别
+
+
