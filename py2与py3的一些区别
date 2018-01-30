@@ -1,0 +1,4 @@
+1. python3里的print是一个方法，使用时需要带上()
+2. python2里unicode与str的转换在python3里变成了bytes与str的转换
+unicode->encode->str; str->decode->unicode;
+bytes->decode->str ; str-> encode -> bytes;
