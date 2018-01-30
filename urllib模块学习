@@ -1,18 +1,141 @@
 Python 爬虫学习总结
-urllib模块知识点梳理
+一. urllib模块知识点梳理
+python2里的用法
+1. 使用urlopen方法发起页面请求
+resp = urlopen(url, [data, [proxies]])
+data: 页面参数，字典类型，使用urlencode()进行编码
+proxies: 定义代理
 
-常用方法与内置属性
+调用urlopen方法返回对象的方法或者属性可以获得页面源代码，状态码，页面header等信息
+resp.read()        # 返回页面源代码
+resp.readline()    
+resp.readlines()
+resp.url 
+resp.headers    
+resp.code        # 返回状态码
 
-urlopen
+2. POST与GET参数
+GET的方式：拼接url
+>>> import urllib
+>>> params = urllib.urlencode({'spam': 1, 'eggs': 2, 'bacon': 0})
+>>> f = urllib.urlopen("http://www.musi-cal.com/cgi-bin/query?%s" % params)
+>>> print f.read()
 
-带参数
+POST的方式：构造一个url参数，例子如下
+>>> import urllib
+>>> params = urllib.urlencode({'spam': 1, 'eggs': 2, 'bacon': 0})
+>>> f = urllib.urlopen("http://www.musi-cal.com/cgi-bin/query", params)
+>>> print f.read()
 
-使用代理
+3. 使用代理
+>>>proxies = {'http': 'http://www.someproxy.com:3128'}
+方法一：
+>>>filehandle = urllib.urlopen(some_url, proxies=proxies)
+方法二：
+>>> opener = urllib.FancyURLopener(proxies)
+>>> f = opener.open("http://www.python.org")
+>>> f.read()
 
-伪造浏览器
+4. 伪造浏览器
+urllib 模块不能伪装你的User Agent字符串等（伪装浏览器）
 
-图片下载
+5. 使用urlretrieve方法可以下载图片
+urlretrieve(url, [filename])
+url: 网络图片对应的url
+filename: 保存保存路径
 
-urllib在python2与python3的区别
+6. urllib模块的辅助方法
+6.1 对url字符串进行编码
+quote(), quote_plus()
+>>> urllib.quote('http://www.baidu.com')
+'http%3A//www.baidu.com'
+>>> urllib.quote_plus('http://www.baidu.com')
+'http%3A%2F%2Fwww.baidu.com'
+6.2 对url进行解码
+unquote(), unquote_plus()
+>>>urllib.unquote('http://news.search.hexun.com/news?key=%B4%F3%C0%ED%B1%A6%D4%B6')
+>>>'http://news.search.hexun.com/news?key=\xb4\xf3\xc0\xed\xb1\xa6\xd4\xb6'
+
+python3里的改变
+python3把urlopen等方法按照用途分别合并到urllib.request, urllib.parse, urllib.response模块里，并引入了Request方法，可以伪造浏览器，python3里的
+urllib包在某些功能的使用上类似urllib2
+1. 最简单的请求
+>>> import urllib.request
+>>> response = urllib.request.urlopen('https://www.baidu.com/')
+>>> response
+<http.client.HTTPResponse object at 0x000002603CF31860>
+>>> response = urllib.request.urlopen('https://www.baidu.com/')
+>>> response.url
+'https://www.baidu.com/'
+>>> response.headers
+<http.client.HTTPMessage object at 0x000002603CF31C50>
+>>> response.code
+200
+>>> print(response.headers)
+Accept-Ranges: bytes
+Cache-Control: no-cache
+Content-Length: 227
+Content-Type: text/html
+Date: Tue, 30 Jan 2018 12:16:12 GMT
+Last-Modified: Mon, 22 Jan 2018 07:46:00 GMT
+P3p: CP=" OTI DSP COR IVA OUR IND COM "
+Pragma: no-cache
+Server: BWS/1.1
+Set-Cookie: BD_NOT_HTTPS=1; path=/; Max-Age=300
+Set-Cookie: BIDUPSID=D8F23F6387C70AA698797ED474452B16; expires=Thu, 31-Dec-37 23:55:55 GMT; max-age=2147483647; path=/; domain=.baidu.com
+Set-Cookie: PSTM=1517314572; expires=Thu, 31-Dec-37 23:55:55 GMT; max-age=2147483647; path=/; domain=.baidu.com
+Strict-Transport-Security: max-age=0
+X-Ua-Compatible: IE=Edge,chrome=1
+Connection: close
+
+2. 使用Request方法
+>>> req = urllib.request.Request('http://www.baidu.com')
+>>> resp = urllib.request.urlopen(req)
+>>> resp.read()
+
+3. POST方式发送数据
+import urllib.request
+import urllib.parse
+d = urllib.parse.urlencode({'id':'A01', 'dbcode':'hgyd', 'wdcode':'zb','m':'getTree'}).encode('utf-8')
+print(type(d))
+req = urllib.request.Request('http://data.stats.gov.cn/easyquery.htm', d)
+resp = urllib.request.urlopen(req)
+print(resp.read())
+
+4. 构造headers
+import urllib.parse  
+import urllib.request  
+url = ''  
+user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'  
+headers = { 'User-Agent' : user_agent }  
+req = urllib.request.Request(url)  
+req.add_header('Referer', 'http://www.python.org/')  
+response = urllib.request.urlopen(req)  
+the_page = response.read()  
+print(the_page.decode("utf8"))  
+
+5. 使用代理
+import urllib.request  
+proxy_support = urllib.request.ProxyHandler({'sock5': 'localhost:1080'})  
+opener = urllib.request.build_opener(proxy_support)  
+urllib.request.install_opener(opener)  
+a = urllib.request.urlopen("").read().decode("utf8")  
+print(a)  
+
+6. 异常处理
+from urllib.request import Request, urlopen  
+from urllib.error import URLError, HTTPError  
+req = Request("http://www..net /")  
+try:  
+    response = urlopen(req)  
+except HTTPError as e:  
+    print('The server couldn't fulfill the request.')  
+    print('Error code: ', e.code)  
+except URLError as e:  
+    print('We failed to reach a server.')  
+    print('Reason: ', e.reason)  
+else:  
+    print("good!")  
+    print(response.read().decode("utf8"))  
 
 
