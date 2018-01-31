@@ -63,12 +63,53 @@ c. urllib包括urlencode方法，用来对字典类型的参数进行编码
 
 urllib2模块的主要功能应用
 1. 最简单的用法
+1.1 使用urlopen
+import urllib2
+resp = urllib2.urlopen('http://www.baidu.com')
+resp.read()
 
-2. 发送cookie
+1.2 使用Request
+import urllib2
+req = urllib2.Request('http://www.baidu.com')       # 先定义一个请求对象，可以调用该对象的一些方法做处理，比如添加header，发送数据等操作
+resp = urllib2.urlopen(req)
+resp.read()
 
-3. 伪造浏览器
+2. 发送数据
+2.1 GET
+import urllib
+import urllib2
+query_args = { 'q':'query string', 'foo':'bar' }
+encoded_args = urllib.urlencode(query_args)
+print 'Encoded:', encoded_args              # 'Encoded:q=query+string&foo=bar'
+url = 'http://localhost:8080/?' + encoded_args
+print urllib2.urlopen(url).read()
+2.2 POST
+import urllib
+import urllib2
 
-4. 使用代理
+query_args = { 'q':'query string', 'foo':'bar' }
+encoded_args = urllib.urlencode(query_args)
+url = 'http://localhost:8080/'
+
+2.2.1
+print urllib2.urlopen(url, encoded_args).read()
+
+2.2.2
+request = urllib2.Request('http://localhost:8080/')
+request.add_data(encoded_args)
+print urllib2.urlopen(request).read()
+
+3. 使用cookie
+
+4. 伪造浏览器
+import urllib2
+request = urllib2.Request('http://localhost:8080/')
+request.add_header('User-agent', 'PyMOTW (http://www.doughellmann.com/PyMOTW/)')
+response = urllib2.urlopen(request)
+data = response.read()
+print data
+
+5. 使用代理
 
 
 三. python3里的改变
