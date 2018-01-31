@@ -1,0 +1,1 @@
+urllib2模块结合urllib，cookielib模块可以用来模拟有用户登陆的情况
