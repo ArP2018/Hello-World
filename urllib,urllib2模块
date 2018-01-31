@@ -1,6 +1,5 @@
-Python 爬虫学习总结
+python2里的
 一. urllib模块知识点梳理
-python2里的用法
 1. 使用urlopen方法发起页面请求
 resp = urlopen(url, [data, [proxies]])
 data: 页面参数，字典类型，使用urlencode()进行编码
@@ -56,9 +55,27 @@ unquote(), unquote_plus()
 >>>urllib.unquote('http://news.search.hexun.com/news?key=%B4%F3%C0%ED%B1%A6%D4%B6')
 >>>'http://news.search.hexun.com/news?key=\xb4\xf3\xc0\xed\xb1\xa6\xd4\xb6'
 
-python3里的改变
-python3把urlopen等方法按照用途分别合并到urllib.request, urllib.parse, urllib.response模块里，并引入了Request方法，可以伪造浏览器，python3里的
-urllib包在某些功能的使用上类似urllib2
+二. python2里的urllib2模块
+与urllib模块的区别：
+a. urllib只可以发送url请求，urllib2可以设置请求header以达到伪造浏览器的目的
+b. urllib2可以结合cookielib模块发送cookie
+c. urllib包括urlencode方法，用来对字典类型的参数进行编码
+
+urllib2模块的主要功能应用
+1. 最简单的用法
+
+2. 发送cookie
+
+3. 伪造浏览器
+
+4. 使用代理
+
+
+三. python3里的改变
+python3对模块进行了打包合并，主要的两个模块http和urllib，从3.3开始不再使用urllib2模块。
+urllib按功能又包括了三个主要子模块
+urllib.request, urllib.response, urllib.parse
+
 1. 最简单的请求
 >>> import urllib.request
 >>> response = urllib.request.urlopen('https://www.baidu.com/')
@@ -137,5 +154,3 @@ except URLError as e:
 else:  
     print("good!")  
     print(response.read().decode("utf8"))  
-
-
