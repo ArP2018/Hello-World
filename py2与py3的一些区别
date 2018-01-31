@@ -2,3 +2,4 @@
 2. python2里unicode与str的转换在python3里变成了bytes与str的转换
 unicode->encode->str; str->decode->unicode;
 bytes->decode->str ; str-> encode -> bytes;
+3. 从python3.3开始，urllib2模块不再使用，urllib2模块与urllib模块进行了整合，统一使用urllib.request
