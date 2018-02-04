@@ -1,1 +1,81 @@
-项目需要根据经销商名称爬取爱卡汽车论坛的数据，经过简单分析，
+项目需要根据经销商名称爬取爱卡汽车论坛的数据，经过简单分析，发现点击搜索按钮后，后台实际上发送了另外一个请求到服务器，服务器返回json数据，浏览器端根据
+返回的数据动态生成结果页面。
+
+初步分析，我们请求的页面应该是从服务器获取json数据的url
+http://sou.xcar.com.cn/XcarSearch/infobbssearchresult/bbs/%E5%A4%A7%E7%90%86%E5%AE%9D%E8%BF%9C/none/none/none/none/1?rand=1517727663801
+大喜过望，满心以为这时使用urllib包的方法就能拿到想要的数据，然而结果却是让我们失望的，我得到的是一个404错误
+urllib.error.HTTPError: HTTP Error 404: Not Found
+WTF!
+
+进一步分析，可能是因为服务端做了cookie的验证，完善代码，把请求的cookie加进去，这是直接从浏览器管理控制台直接copy过来的
+Cookie:_PVXuv=5a0145b6d0ac6; _Xdwuv=5100328271440; _fwck_www=29c31ac97514544e8ecae0049eb008c4; _appuv_www=129b31efaf1f6ee8b4828fc20d023364; _Xdwnewuv=1; place_prid=4; place_crid=539; place_ip=183.228.114.254_1; _fwck_a=105d2a01018a82e2cddecce32d5491be; _appuv_a=f3199c97193f95ad3fca836522c16671; _locationInfo_=%7Burl%3A%22http%3A%2F%2Fchongqing.xcar.com.cn%2F%22%2Ccity_id%3A%22539%22%2Cprovince_id%3A%224%22%2C%20city_name%3A%22%25E9%2587%258D%25E5%25BA%2586%22%7D; ad__city=539; Hm_lvt_53eb54d089f7b5dd4ae2927686b183e0=1517382829,1517535020,1517725348; Hm_lpvt_53eb54d089f7b5dd4ae2927686b183e0=1517725348; BIGipServerpool-c26-xcar-data-80=2378764042.20480.0000; uv_firstv_refers=http%3A//www.xcar.com.cn/; _fwck_my=24c59c290b8ff5a2e132aa209d698bef; _appuv_my=fbef5013b8bc4b4d48b7637f7172eda7; _Xdwstime=1517727471
+
+import urllib.request
+
+url = 'http://sou.xcar.com.cn/XcarSearch/infobbssearchresult/bbs/%E5%A4%A7%E7%90%86%E5%AE%9D%E8%BF%9C/none/none/none/none/1?rand=1517727663801'
+headers = {
+    'cookie': '_PVXuv=5a0145b6d0ac6; _Xdwuv=5100328271440; _fwck_www=29c31ac97514544e8ecae0049eb008c4; _appuv_www=129b31efaf1f6ee8b4828fc20d023364; _Xdwnewuv=1; place_prid=4; place_crid=539; place_ip=183.228.114.254_1; _fwck_a=105d2a01018a82e2cddecce32d5491be; _appuv_a=f3199c97193f95ad3fca836522c16671; _locationInfo_=%7Burl%3A%22http%3A%2F%2Fchongqing.xcar.com.cn%2F%22%2Ccity_id%3A%22539%22%2Cprovince_id%3A%224%22%2C%20city_name%3A%22%25E9%2587%258D%25E5%25BA%2586%22%7D; ad__city=539; Hm_lvt_53eb54d089f7b5dd4ae2927686b183e0=1517382829,1517535020,1517725348; Hm_lpvt_53eb54d089f7b5dd4ae2927686b183e0=1517725348; BIGipServerpool-c26-xcar-data-80=2378764042.20480.0000; uv_firstv_refers=http%3A//www.xcar.com.cn/; _fwck_my=24c59c290b8ff5a2e132aa209d698bef; _appuv_my=fbef5013b8bc4b4d48b7637f7172eda7; _Xdwstime=1517727471'
+}
+req = urllib.request.Request(url, headers=headers)
+resp = urllib.request.urlopen(req)
+print(resp.read())
+
+bingo! 
+简短几行代码就可以拿到服务器返回的json数据
+
+番外：
+上面代码只是简单的一个演示，cookie也是直接从浏览器copy过来写死到代码里的，如果使用cookiejar的方式来保存cookie会不会可行呢？
+实验如下：
+经过分析，打开爱卡汽车论坛首页的过程中有四个页面都有set-cookie的操作，所以逐个页面发起请求，完了打印cookiejar里的信息
+# encoding: utf-8
+import urllib2
+import cookielib
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0',
+    'Referer': 'http://search.xcar.com.cn/bbssearch.php',
+    'Connection': 'Keep-Alive'
+}
+
+main_page = 'http://search.xcar.com.cn/index.php'
+cookie_page = 'http://dw.xcar.com.cn/analytics.php'
+login_url = 'http://www.xcar.com.cn/site_js/header/new_login_2015.php?t=1517466381000'
+login_url_2 = 'http://tools.xcar.com.cn/ip2city/ip2getcity.php?_t=json&s=1517466381000&from=http%3A%2F%2Fsearch.xcar.com.cn%2Findex.php'
+search_page = 'http://sou.xcar.com.cn/XcarSearch/infobbssearchresult/bbs/%E5%A4%A7%E7%90%86%E5%AE%9D%E8%BF%9C/none/none/none/none/1?rand=1517455262927'
+
+cj = cookielib.LWPCookieJar()
+
+cookie_support = urllib2.HTTPCookieProcessor(cj)
+opener = urllib2.build_opener(cookie_support, urllib2.HTTPHandler)
+urllib2.install_opener(opener)
+
+req = urllib2.Request(main_page, headers=headers)
+resp = urllib2.urlopen(re
+
+req = urllib2.Request(cookie_page, headers=headers)
+urllib2.urlopen(req)
+
+req = urllib2.Request(login_url, headers=headers)
+urllib2.urlopen(req)
+
+req = urllib2.Request(login_url_2, headers=headers)
+urllib2.urlopen(req)
+
+for item in cj:
+    print item.name+': '+ item.value
+
+# urllib2.urlopen(urllib2.Request(search_page, headers=headers))
+
+cookie里确实已经保存了一部分信息，我在上面代码的基础上发起对search_page这个页面的请求，得到的结果还是404
+
+分析发现上面代码得到的cookie信息不全，有一个cookie（_PVXuv）信息是在JavaScript代码里写到本地的，而cookiejar正好没获取到这个cookie信息
+测试：
+在最开始的代码里将_PVXuv这个cookie去掉，果然请求不到数据，返回404
+
+所以，这里就有一个问题了，既然cookiejar得不到js写到本地的cookie，那么，有没有其他办法可以读取到这个cookie呢？
+百度之后得到了想要的解答，详见《python读取chrome浏览器的cookie》
+
+总结：
+其实，如果只是为了快速获取到这部分json数据，完全可以把这部分cookie从浏览器copy过来放到代码里就行，之所以有cookiejar以及本地读取cookie这个后续，
+主要是为了学习和熟悉cookiejar以及浏览器cookie这些知识点
+
