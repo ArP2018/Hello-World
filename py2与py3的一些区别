@@ -3,3 +3,4 @@
 unicode->encode->str; str->decode->unicode;
 bytes->decode->str ; str-> encode -> bytes;
 3. 从python3.3开始，urllib2模块不再使用，urllib2模块与urllib模块进行了整合，统一使用urllib.request
+4. python2 里的cookielib包在python3里修改为http.cookiejar
