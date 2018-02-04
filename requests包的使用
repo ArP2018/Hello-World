@@ -1,0 +1,28 @@
+相较于urllib与urllib2包， requests是一个第三方包，使用前需要安装
+pip install requests
+
+除了使用前需要安装外，requests包使用使用起来比urllib和urllib2包更加方便，功能也比较完善。排除框架而论，在爬数据方面，这个包是个人首选包。
+
+requests包的常规功能使用例子：
+
+# 1.最简单的GET请求
+tar_url_01 = 'http://www.baidu.com'
+resp_01 = requests.get(tar_url_01)
+# print(resp_01.text)
+
+2. # 添加header
+ua_header ={
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko'
+}
+tar_url_02 = 'http://www.xcar.com.cn/'
+resp_02 = requests.get(tar_url_02, headers=ua_header)
+print(resp_02.text)
+
+3.  # 提交数据
+tar_url_03 = 'http://data.stats.gov.cn/easyquery.htm'
+post_data = {'dbcode': 'hgnd', 'id': 'zb', 'm': 'getTree', 'wdcode': 'zb'}
+resp_03 = requests.post(tar_url_03, post_data).json()
+print(resp_03)
+
+详细用法参照官方文档  http://www.python-requests.org/en/master/
+
