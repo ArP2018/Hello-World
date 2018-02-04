@@ -100,7 +100,28 @@ request.add_data(encoded_args)
 print urllib2.urlopen(request).read()
 
 3. 使用cookie
-详见：《urllib2配合cookielib模拟登陆》
+    1. 创建cookiejar对象
+    1.1.1 cj = cookielib.CookieJar()   # py2
+    1.1.2 cj = http.cookiejar.CookieJar()   # py3
+
+    1.2 CookieJar, FileCookieJar, LWPCookieJar, MozillaCookieJar 的关系
+    CookieJar是父类，这几个类的继承关系，具体区别等有时间在细究
+    CookieJar->FileCookieJar->LWPCookieJar
+                            ->MozillaCookieJar
+
+    2. 创建handler
+    2.1.1 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))      # py2
+    2.1.2 opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))      # py3
+
+    3. 添加handler
+    3.1.1 urllib2.install_opener(opener)      # py2
+    3.1.2 urllib.request.install_opener(opener)  # py3
+
+    4. 添加handler后，每次请求页面返回的cookie都会被cookiejar记录，可以通过遍历cookiejar对象查看
+    for item in cj:
+        print item.name+': '+ item.value
+    
+    5. 具体例子详见《模拟人人网登陆》，《使用urllib2爬取爱卡汽车论坛数据》
 
 4. 伪造浏览器
 import urllib2
