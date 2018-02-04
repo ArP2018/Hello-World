@@ -1,0 +1,63 @@
+'''
+使用python模拟登陆，需要具体情况具体分析，通过抓包分析清楚登陆过程中到底有哪些url的变化（跳转），登陆过程发了哪些数据，这是整个过程最重要的一步
+绝大部分网站登陆的时候都需要携带cookie，所以通常还需要使用处理cookie的包来预先拿到请求需要携带的cookie。
+
+下面例子模拟登陆人人网，比起腾讯等大网站的登陆要简单得多，就当学习cookie在爬取数据过程中的使用
+本例子使用的python版本是2.7，在python3.6里，cooklib包被改为http.cookiejar， urllib也跟urllib2整合成了urllib.request
+'''
+
+# encoding: utf-8
+
+import cookielib
+import json
+import urllib
+import urllib2
+
+login_url = 'http://www.renren.com/'
+# 通过抓包工具Fiddler追踪到的用户登陆提交数据的地址
+post_url = 'http://www.renren.com/ajaxLogin/login?1=1&uniqueTimestamp=201803178425'
+
+# 伪造请求头
+req_header = {
+    'Referer': login_url,
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko',
+
+}
+
+# 创建cookie处理器(handler)，对网页发起请求，服务器端返回的cookie值都会被它记录，在以后的请求中会带上这些cookie
+cj = cookielib.CookieJar()
+cookie_support = urllib2.HTTPCookieProcessor(cj)
+opener = urllib2.build_opener(cookie_support, urllib2.HTTPHandler)
+urllib2.install_opener(opener)
+
+# 向登陆页面发起请求，这一步骤的目的是下载cookie到cookiejar，这样就保证了再次post登陆操作的时候可以成功携带上cookie
+h = urllib2.urlopen(login_url)
+
+# 通过抓包分析，获取到提交登陆请求时需要post的参数
+post_data = urllib.urlencode({
+    'email': 'yalin1012@126.com',
+    'icode': '',
+    'origURL': 'http://www.renren.com/home',
+    'domain': 'renren.com',
+    'key_id': 1,
+    'captcha_type': 'web_login',
+    'password': '0098aa0f956163410f3032fe004a2fa49c677771f95e9aaa485820c30b1cdd3e',
+    'rkey': 'ed1e0c3465fa2b6e3dd955cddcac95a9',
+    'f': ''
+})
+
+
+req = urllib2.Request(post_url, post_data, req_header)
+
+resp = urllib2.urlopen(req)
+resp = json.loads(resp.read())
+print resp
+# 返回的数据如下
+#  {u'code': True, u'homeUrl': u'http://www.renren.com/home'}
+
+print resp['homeUrl']
+# 发起个人主页请求
+resp = urllib2.urlopen(resp['homeUrl'])
+print resp.read()
+
+
