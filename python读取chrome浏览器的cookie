@@ -1,0 +1,46 @@
+通过百度，了解到了浏览器cookie文件的存放路径
+e.g. Chrome浏览器的cookie文件路径 C:\Users\user name\AppData\Local\Google\Chrome\User Data\Default\Cookies
+
+cookie文件实际上是一个sqllite数据库文件
+下载 DB Browser for Sqlite 打开该文件，可以看到各个站点保存下来的cookie信息
+
+编写代码， 读取cookie文件里的信息， 根据站点名获取对应站点保存到本地的cookie信息， 验证cookie信息
+
+# encoding: utf-8
+
+import sqlite3
+from win32crypt import CryptUnprotectData
+
+import os
+import requests
+
+def get_cookie_from_chrome(host='.xcar.com.cn'):
+    cookie_path = os.environ['LOCALAPPDATA'] + r'\Google\Chrome\User Data\Default\Cookies'
+
+    cookie_sql = 'select host_key,name,encrypted_value from cookies where host_key="%s"' % host
+
+    # sqllite数据库的连接
+    with sqlite3.connect(cookie_path) as conn:
+        # 与mysql相似，也是要创建一个cursor
+        cur = conn.cursor()
+        result = cur.execute(cookie_sql).fetchall()
+
+        # 创建cookie字典， 需要注意的是cookie文件里保存的cookie对应的value是加密的，需要对其解密
+        cookies = {name: CryptUnprotectData(encrypted_value)[1] for host_key, name, encrypted_value in result}
+        # for host_key, name, encrypted_value in result:
+        #     print(host_key, name, CryptUnprotectData(encrypted_value))
+
+    # print(cookies)
+    return cookies
+
+
+if __name__ == '__main__':
+    ua_header = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko'
+    }
+    xcar_url = 'http://sou.xcar.com.cn/XcarSearch/infobbssearchresult/bbs/%E5%A4%A7%E7%90%86%E5%AE%9D%E8%BF%9C/none/none/none/none/1?rand=1517455262927'
+
+    # 验证cookie
+    resp = requests.get(xcar_url, headers=ua_header, cookies=get_cookie_from_chrome())
+    print(resp.text)
+
