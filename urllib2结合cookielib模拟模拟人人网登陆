@@ -35,13 +35,13 @@ h = urllib2.urlopen(login_url)
 
 # 通过抓包分析，获取到提交登陆请求时需要post的参数
 post_data = urllib.urlencode({
-    'email': 'yalin1012@126.com',
+    'email': 'xxxx@xx.com',
     'icode': '',
     'origURL': 'http://www.renren.com/home',
     'domain': 'renren.com',
     'key_id': 1,
     'captcha_type': 'web_login',
-    'password': '0098aa0f956163410f3032fe004a2fa49c677771f95e9aaa485820c30b1cdd3e',
+    'password': 'xxxxxxxx',   # 这里的密码是加密的
     'rkey': 'ed1e0c3465fa2b6e3dd955cddcac95a9',
     'f': ''
 })
