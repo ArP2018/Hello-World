@@ -1,0 +1,26 @@
+urllib2模块结合urllib，cookielib模块可以用来模拟有用户登陆的情况
+
+具体步骤如下：
+1. 创建cookiejar对象
+
+1.1.1 cj = cookielib.CookieJar()   # py2
+1.1.2 cj = http.cookiejar.CookieJar()   # py3
+
+1.2 CookieJar, FileCookieJar, LWPCookieJar, MozillaCookieJar 的关系
+CookieJar是父类，这几个类的继承关系，具体区别等有时间在细究
+CookieJar->FileCookieJar->LWPCookieJar
+                        ->MozillaCookieJar
+                        
+2. 创建handler
+2.1.1 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))      # py2
+2.1.2 opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))      # py3
+
+3. 添加handler
+3.1.1 urllib2.install_opener(opener)      # py2
+3.1.2 urllib.request.install_opener(opener)  # py3
+
+4. 添加handler后，每次请求页面返回的cookie都会被cookiejar记录，可以通过遍历cookiejar对象查看
+for item in cj:
+    print item.name+': '+ item.value
+    
+关于cookiejar具体的使用
