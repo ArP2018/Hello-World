@@ -1,1 +1,53 @@
 
+SqlLite是一个非常小的适合做嵌入式开发的开源数据库软件，python对于sqllite也有很好的支持，python内置了sqllite包，使用时直接引入sqllite包即可
+
+sqllite的使用跟mysqldb类似，都是常规的数据库操作步骤。
+
+# 引入相关模块
+# 创建数据库连接对象
+# 连接对象既可以是硬盘上的数据库文件，也可以是内存
+# 创建硬盘数据库连接的时候，如果数据库文件不存在，则会创建一个
+# 硬盘数据库实务操作需要进行commit操作， 内存数据库则不需要进行commit
+conn = sqllite3.connect('d:\\test.db')
+conn = sqlite3.connect('"memory:')
+# 创建游标对象
+# 使用游标对象执行sql语句
+# 使用游标对象执行查询，使用游标对象的fetch方法获得查询结果集
+
+# encoding: utf-8
+
+import sqlite3
+
+# 打开当前目录下的test数据库, 没有则创建一个名为test.db的数据库
+conn = sqlite3.connect('test.db')
+
+# 创建一个cursor对象执行数据库相关操作
+cur = conn.cursor()
+
+sql_create = 'create table person(id int, name , team, uniform_num)'
+sql_drop = 'drop table test01'
+cur.execute(sql_create)
+cur.execute(sql_drop)
+
+cur.execute('insert into person(id, name, team, uniform_num) values(1, "Kobe-Bryant", "Lakers", 24)')
+cur.execute('insert into person(id, name, team, uniform_num) values(2, "Tracy-McGrady", "Magic", 1)')
+cur.execute('insert into person(id, name, team, uniform_num) values(3, "Dirk-Nowitzki", "Lakers", 41)')
+cur.execute('insert into person(id, name, team, uniform_num) values(4, "Stephon-Curry", "Warriors", 30)')
+cur.execute('insert into person(id, name, team, uniform_num) values(5, "Kevin-Garnett", "Timberwolves", 21)')
+
+
+cur.execute('select * from person where uniform_num = 1')
+print(cur.rowcount)
+data = cur.fetchall()
+print(data)
+
+# cursor使用完毕后记得关闭
+cur.close()
+# 创建在硬盘上的sqllite数据库执行完事务后要commite
+conn.commit()
+# 使用完成后记得执行关闭操作
+conn.close()
+
+
+
+
