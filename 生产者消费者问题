@@ -1,0 +1,105 @@
+# 使用多线程和队列来实现生产者和消费者问题
+# 队列用来存放缓冲资源
+
+# encoding: utf-8
+import random
+from Queue import Queue
+from time import sleep
+from myThread import MyThread
+
+
+def cook_food(queue):
+    print('Cooking food for customer ...')
+    queue.put('food', 1)
+    print('Foods on table now %s' % queue.qsize())
+
+
+def eat_food(queue):
+    print('Getting food from table ...')
+    queue.get(1)
+    print('Foods on table now %s' % queue.qsize())
+
+
+def cook(queue, nloops):
+    for i in range(nloops):
+        cook_food(queue)
+        sleep(random.randint(2, 4))
+
+
+def customer(queue, nloops):
+    for i in range(nloops):
+        eat_food(queue)
+        sleep(random.randint(3, 7))
+
+
+def main():
+    funcs = [cook, customer]
+    nfuncs = range(len(funcs))
+
+    q = Queue(16)
+    nloops = random.randint(5, 10)
+
+    print('ready for cooking food, will cook %s dishes' % nloops)
+
+    threads = []
+
+    # 分配线程模拟厨师cook和消费者customer
+    for i in nfuncs:
+        th = MyThread(funcs[i], (q, nloops), funcs[i].__name__)
+        threads.append(th)
+
+    for t in threads:
+        t.start()
+
+    for t in threads:
+        t.join()
+
+    print('finished all foods')
+
+
+if __name__ == '__main__':
+    main()
+
+
+output：
+C:\Python27\python.exe C:/Projects/PythonTesting/threading_test/prod_cons.py
+ready for cooking food, will cook 8 dishes
+starting Thread-1 at Wed Feb 07 17:56:38 2018
+Cooking food for customer ...
+starting Thread-2 at Wed Feb 07 17:56:38 2018Foods on table now 1
+
+Getting food from table ...
+Foods on table now 0
+Cooking food for customer ...
+Foods on table now 1
+Cooking food for customer ...
+Foods on table now 2
+Getting food from table ...
+Foods on table now 1
+Cooking food for customer ...
+Foods on table now 2
+Getting food from table ...
+Foods on table now 1
+Cooking food for customer ...
+Foods on table now 2
+Cooking food for customer ...
+Foods on table now 3
+Getting food from table ...
+Foods on table now 2
+Cooking food for customer ...
+Foods on table now 3
+Getting food from table ...
+Foods on table now 2
+Cooking food for customer ...
+Foods on table now 3
+Getting food from table ...
+Foods on table now 2
+finished Thread-1 at Wed Feb 07 17:57:01 2018
+Getting food from table ...
+Foods on table now 1
+Getting food from table ...
+Foods on table now 0
+finished Thread-2 at Wed Feb 07 17:57:16 2018
+finished all foods
+
+Process finished with exit code 0
