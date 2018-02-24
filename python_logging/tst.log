@@ -1,0 +1,11 @@
+2018-02-23 10:36:53,184 - test03 - ERROR - this is test03 module
+2018-02-23 10:36:53,184 - test03.test0301 - ERROR - this is test0301 function
+2018-02-23 10:37:47,901 - test03 - ERROR - this is test03 module
+2018-02-23 10:37:47,901 - test03.test0301 - ERROR - this is test0301 function
+2018-02-23 10:41:08,963 - test03 - ERROR - this is test03 module
+2018-02-23 10:41:08,963 - test0301 - ERROR - this is test0301 function
+2018-02-23 10:42:15,286 - test03 - ERROR - this is test03 module
+2018-02-23 10:42:15,286 - test0301 - ERROR - this is test0301 function
+2018-02-23 10:42:24,446 - test0301 - ERROR - this is test0301 module
+2018-02-23 10:42:24,447 - test03 - ERROR - this is test03 module
+2018-02-23 10:42:24,447 - test0301 - ERROR - this is test0301 function
