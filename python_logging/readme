@@ -1,0 +1,4 @@
+logging.config 作为日志的配置文件
+test03.py: 主模块
+test0301.py: 被调用模块
+
