@@ -1,0 +1,10 @@
+import configparser
+
+cp = configparser.ConfigParser()
+cp.read('config.ini', encoding='utf-8')
+
+print(cp.sections())
+print(cp.keys())
+print(cp.items())
+print(cp.get('section_a', 'item2'))
+print(cp.options('section_b'))
