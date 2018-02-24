@@ -1,0 +1,8 @@
+python3可以使用configparser模块的方法，方便的读取程序里配置文件的内容
+
+配置文件格式
+[section]
+item = value
+[section2]
+item = value
+...
