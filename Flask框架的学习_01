@@ -1,0 +1,31 @@
+day01
+
+flask框架的安装，编写helloe world
+
+环境说明: win10/python35
+安装：
+1. 打开命令行窗口, 执行命令workon py35激活之前创建好的python3虚拟目录
+c:\Projects\GitHub>workon py35
+(py35) c:\Projects\GitHub>python
+Python 3.5.0 (v3.5.0:374f501f4567, Sep 13 2015, 02:27:37) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+2. 执行pip install flask自动安装flask包
+
+基本概念说明：
+路由映射：客户端的url请求与Flask程序实例里处理函数之间的关系
+使用@app.route装饰器来将相应函数注册为路由
+注册视图函数的方式：
+1. 不带参数
+@app.route('/')
+def hello():
+    return 'Hello Flask'
+    
+2. 带参数
+@app.route('/user/<name>'):
+ def hello(name):
+    return 'Hello {user}!'.format(user=name)
+
+指定参数类型：
+@app.route('/user/<int:id>):
+
