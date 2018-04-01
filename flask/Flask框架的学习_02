@@ -1,0 +1,67 @@
+day02
+
+静态资源
+Flask项目的静态资源默认放在项目根目录下的static目录中
+使用url_for函数访问链接或者静态资源
+href = "{{ url_for('static', file_name='favicon.ico') }}"
+
+编写一个表单页
+1. 安装Flask的表单模块
+pip install flask-wtf
+2. 对使用flask表单的app设置秘钥
+app.config['SECRET_KEY'] = 'XXXXX'
+3. 引入表单，定义一个表单类
+from flask_wtf import Form
+from wtforms import StringField, SubmitField
+from wtforms import Required
+
+class NameForm(Form):
+    name = StringField('what is your name?', validators=[Required()])
+    submit = SubmitField('Submit')
+3. 在视图函数中实例化一个表单，作为参数传入render_template方法    
+4. 渲染表单页面
+{% import 'bootstrap/wtf.html' as wtf %}
+{{ wtf.quick_form(form) }}      # form即render_template方法中带的form参数对应的form对象
+
+WTForm支持的HTML表单字段
+StringField    文本字段
+TextAreaField  多行文本字段
+PasswordField   密码文本字段
+HiddenField    隐藏文本字段
+DateField     文本字段，值为datetime.date 格式
+DateTimeField   文本字段，值为datetime.datetime 格式
+IntegerField     文本字段，值为整数
+DecimalField     文本字段，值为decimal.Decimal
+FloatField     文本字段，值为浮点数
+BooleanField     复选框，值为True 和False
+RadioField    一组单选框
+SelectField    下拉列表
+SelectMultipleField 下拉列表，可选择多个值
+FileField    文件上传字段
+SubmitField    表单提交按钮
+FormField     把表单作为字段嵌入另一个表单
+FieldList    一组指定类型的字段
+
+WTForms自带的表单字段验证函数
+Email        验证电子邮件地址
+EqualTo      比较两个字段的值；常用于要求输入两次密码进行确认的情况
+IPAddress    验证IPv4 网络地址
+Length       验证输入字符串的长度
+NumberRange  验证输入的值在数字范围内
+Optional     无输入值时跳过其他验证函数
+Required     确保字段中有数据
+Regexp       使用正则表达式验证输入值
+URL          验证URL
+AnyOf        确保输入值在可选值列表中
+NoneOf       确保输入值不在可选值列表中
+
+重定向和会话（session）
+如果刷新表单页面，会弹出一个警告，这是因为刷新浏览器会重新发送之前已经发送过的最后一次请求。
+解决方法：将本页面作为redirect的参数返回
+实现效果： 点击submit（post请求），后端进入视图函数后，服务器返回一个重定向页面，客户端重新对该页面发起请求（这次是get请求），所以有两次请求，
+这种模式也叫做Post/ 重定向/Get 模式
+
+但仅仅这样还不够，因为重新请求会丢失之前submit的值，所以需要引入会话即session来保存已经提交的数据。
+在返回重定向之前，先将submit的值存放到session里
+session['name']=form.name.data
+然后每次get方式请求该页面时，通过session.get('name')的方式来获取之前存取的值，如果没有，则会返回None
