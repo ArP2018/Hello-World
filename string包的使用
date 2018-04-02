@@ -1,0 +1,15 @@
+>>>import string
+>>>string.letter  # 打印所有大小写字母
+'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+>>>string.lowercase   #打印小写字母
+'abcdefghijklmnopqrstuvwxyz'
+>>>string.uppercase   #打印大写字母
+'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+>>>string.digits      #打印数字
+'0123456789'
+
+使用maketrans方法建立两个字符串间的映射关系：
+from string import maketrans, translate
+map_rule = maketrans('aeiou', '12345')
+str = 'hello, evan'
+str.translate(map_rule)
