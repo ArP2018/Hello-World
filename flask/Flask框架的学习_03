@@ -32,5 +32,31 @@ default 为这列定义默认值
 使用：
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
-db = SQLAlchemey(db)    #这里实例化的SQLAlchemy对象db使用方法
+db = SQLAlchemey(app)    #这里实例化的SQLAlchemy对象db使用方法
+
+user = User()
+...
+db.session.add(user)
+db.session.commit()
+
+e.g.
+用户和角色模型
+# 角色
+class Role(db.Model):
+    __tablename__ = 'roles'       # 指定需要映射成的数据表表名
+    id = db.Column(db.Integer, primary_key=True)     # 主键
+    name = db.Column(db.String(64), index=True, unique=True)    
+    # 与User表的关联关系，backref参数指定的是从user对象访问role对象时使用的名字
+    users = db.relationship('User', backref='role', lazy='dynamic') 
+    
+    #访问role对象时返回的形式
+    def __repr__(self):
+        return '<Role %r>'%self.name    
+
+# 用户
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    role_id = db.Column(db.Integer, db.ForeignKey='roles.id')      # 外键字段
 
