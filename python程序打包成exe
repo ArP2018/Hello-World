@@ -1,13 +1,13 @@
-说一说python程序打包成exe可执行文件。
+
 最近做了一个自动识别电脑屏幕上二维码的小程序，百度Google一通搜索，花了几个小时就完成一个简单版本。原
-本以为已经完成98%，就差简简单单的打包一步，却没想到在这一步折腾了一整天。虽然最后发现打包好的exe程序运行报错并非是打包的问题，但是经过这一番折腾，多少
-还是有一些收获，比如更加熟悉了python虚拟环境的使用，遇到问题一定要找对分析方向，不然半小时能解决的问题可能要花一天。
-下面回到正题，说一说如何将python程序打包成一个不需要安装python就可以在windows环境下执行的exe文件。
+本以为已经完成98%，就差简简单单的打包一步，却没想到在这一步折腾了一整天。虽然最后发现打包好的exe报错并非是打包的问题，但是经过这一番折腾，再一次
+熟悉了python程序打包的方法。
+下面回到正题，说一说如何将python程序打包成一个可以在windows环境下执行的exe文件。
 
 常用的python打包工具有py2exe以及pyinstaller，py2exe操作起来没有pyinstaller方便，需要提前编译一个setup.py文件，而且在多版本支持方面也没有
 pyinstaller做的好，所以我们首选pyinstaller
 
-1. 使用pip方式来安装pyinstaller
+1. 安装pyinstaller
 pip install pyinstaller
 说明: 
 安装pyinstaller之前，请确保本地已经安装好了python环境，因为pyinstaller其实是一个python开发的包。
@@ -18,14 +18,12 @@ pip install pyinstaller
 hello.py
 
 # encoding: utf-8
-
 print('hello world!')
 
-3. 在命令行中执行如下命令即可
-pyinstaller test.py
+3. 打开命令行窗口，执行如下命令pyinstaller test.py
 
 说明: 
-命令行执行完毕后会在当前目录下生成build和dist子目录，所以建议在执行命令前先切换至程序所在目录
+以上命令执行完毕后，会在当前目录下生成build和dist子目录，不带任何参数的命令会将程序打包成一个以程序文件命名的目录，保存到dist目录下
 如果程序有多个模块文件，那么只需要指定程序入口文件即可，pyinstaller会去找程序中的依赖模块
 
 常用参数说明：
@@ -35,7 +33,8 @@ pyinstaller test.py
 添加静态文件请使用--add-data参数
 更多的参数使用请参看详细文档
 
-踩过的坑：
+使用pyinstaller打包就是这么简单，最后分享一下踩过的坑：
+
 1. 如果程序里使用了pandas包，打包过程不会报错，但是程序运行会报错，在命令行中查看运行日志，百度后的解决方案：在打包的命令后添加
 --hidden-import=pandas._libs.tslibs.timedeltas， 具体原因等有时间再研究
 2. 程序里使用了pyzbar这个包，在开发环境下运行正常，打包后执行exe会报找不到dll的错误，仔细分析后发现pyzbar这个包会在安装过程中安装两个dll文件，使用
