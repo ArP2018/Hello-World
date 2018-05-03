@@ -1,0 +1,50 @@
+1. 查询字典的时候，尽量使用get方法，这样可以不用判断指定的key存不存在，还可以指定key不存在的时候返回的默认值
+>>> d = {'a':12, 'b':30}
+>>> d['c']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 'c'
+>>> d.get('c')
+>>> d.get('c',-1)
+-1
+
+2. 将list类型的变量v里所有元素传入到可接受可变参数的函数里
+ def f(*nums)
+ v = [1,2,3,4]
+ f(*v)
+ 关键字参数：
+ >>> extra = {'city': 'Beijing', 'job': 'Engineer'}
+>>> person('Jack', 24, **extra)
+name: Jack age: 24 other: {'city': 'Beijing', 'job': 'Engineer'}
+
+**extra表示把extra这个dict的所有key-value用关键字参数传入到函数的**kw参数，kw将获得一个dict，注意kw获得的dict是extra的一份拷贝，
+对kw的改动不会影响到函数外的extra。
+
+如果要限制关键字参数的名字，就可以用命名关键字参数，例如，只接收city和job作为关键字参数。这种方式定义的函数如下：
+
+def person(name, age, *, city, job):
+    print(name, age, city, job)
+
+和关键字参数**kw不同，命名关键字参数需要一个特殊分隔符*，*后面的参数被视为命名关键字参数。
+
+调用方式如下：
+
+>>> person('Jack', 24, city='Beijing', job='Engineer')
+Jack 24 Beijing Engineer
+
+如果函数定义中已经有了一个可变参数，后面跟着的命名关键字参数就不再需要一个特殊分隔符*了：
+
+def person(name, age, *args, city, job):
+    print(name, age, args, city, job)
+3. map/reduce 函数的使用
+map 函数是一个映射函数，需要提供两个参数，第一个参数是函数，第二个参数是iterable
+作用：将iterable参数按照函数规则作一一映射，并返回一个iterator
+reduce 函数接收两个参数，第一个参数是函数（接收两个参数），第二个参数是一个序列。
+作用：先将函数作用于序列的前两个对象上，然后把结果继续和序列的下一个元素做运算
+
+4. filter/sorted函数的使用
+filter与reduce函数一样都需要接收两个参数，第一个参数是函数（返回一个布尔值），第二个是一个序列
+作用：函数作用于序列的每一个元素，根据函数运算结果True/False决定是否将元素过滤
+sorted函数接收一个序列，并指定一个函数作为key参数的值（可选），reverse参数指定排序方向
+作用：key参数对应的函数作用于序列的每一个元素，序列内的元素根据该函数的规则进行排序，实际上就是key参数对应的函数作为一个映射，序列内的每一个元素
+得到一个映射结果，然后对映射结果进行排序
