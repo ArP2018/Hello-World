@@ -52,3 +52,19 @@ Linux上使用virtualenv包操作虚拟环境
 #  9. This time, the "temp" environment is included.
 # 10. Run: workon temp
 # 11. The virtual environment is activated.
+
+workon:列出虚拟环境列表
+
+lsvirtualenv:同上
+
+mkvirtualenv [envname]:新建虚拟环境
+
+workon [envname]:切换虚拟环境
+
+rmvirtualenv  [envname]:删除虚拟环境
+
+deactivate: 离开虚拟环境
+
+cpvirtualenv [sorce] [dest]　　#复制虚拟环境
+
+pip freeze > requirements.txt　　导出该环境下所有依赖到requirements.txt文件
