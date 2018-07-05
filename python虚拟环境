@@ -30,3 +30,25 @@ C:\PyEnvs\py35\Scripts>activate
    workon py27
    
  
+Linux上使用virtualenv包操作虚拟环境
+1. 首先安装virtualenv  ->  pip install virtualenv
+2. 安装virtualenvwrapper   -> pip install virtualenvwrapper
+这里需要主要，因为我使用的是linux自带的python，所以virtualenv和virtualenvwrapper安装好之后默认是在/bin目录下
+如果是使用自己安装的python，默认会安装到/usr/local/bin目录下
+
+# Setup:
+#
+#  1. Create a directory to hold the virtual environments.
+#     (mkdir $HOME/.virtualenvs).
+#  2. Add a line like "export WORKON_HOME=$HOME/.virtualenvs"
+#     to your .bashrc.
+#  3. Add a line like "source /path/to/this/file/virtualenvwrapper.sh"
+#     to your .bashrc.
+#  4. Run: source ~/.bashrc
+#  5. Run: workon
+#  6. A list of environments, empty, is printed.
+#  7. Run: mkvirtualenv temp
+#  8. Run: workon
+#  9. This time, the "temp" environment is included.
+# 10. Run: workon temp
+# 11. The virtual environment is activated.
