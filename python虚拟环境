@@ -36,6 +36,23 @@ Linux上使用virtualenv包操作虚拟环境
 这里需要主要，因为我使用的是linux自带的python，所以virtualenv和virtualenvwrapper安装好之后默认是在/bin目录下
 如果是使用自己安装的python，默认会安装到/usr/local/bin目录下
 
+
+[mark@zabbix ~]$ export WORKON_HOME=~/.virtualenvs
+[mark@zabbix ~]$ source /bin/virtualenvwrapper.sh         #source 命令在这里的作用是执行一个sh文件里的一串shell命令
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/premkproject
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/postmkproject
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/initialize
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/premkvirtualenv
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/postmkvirtualenv
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/prermvirtualenv
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/postrmvirtualenv
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/predeactivate
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/postdeactivate
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/preactivate
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/postactivate
+virtualenvwrapper.user_scripts creating /home/mark/.virtualenvs/get_env_details
+
+
 # Setup:
 #
 #  1. Create a directory to hold the virtual environments.
@@ -54,17 +71,10 @@ Linux上使用virtualenv包操作虚拟环境
 # 11. The virtual environment is activated.
 
 workon:列出虚拟环境列表
-
 lsvirtualenv:同上
-
 mkvirtualenv [envname]:新建虚拟环境
-
 workon [envname]:切换虚拟环境
-
 rmvirtualenv  [envname]:删除虚拟环境
-
 deactivate: 离开虚拟环境
-
 cpvirtualenv [sorce] [dest]　　#复制虚拟环境
-
 pip freeze > requirements.txt　　导出该环境下所有依赖到requirements.txt文件
